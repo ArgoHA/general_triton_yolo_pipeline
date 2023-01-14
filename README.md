@@ -8,12 +8,14 @@ This example should easily transfer to other hardware and models. Note, for the 
 - Install YOLOv5
 
 ### Training and export
-- Trained Yolov5s with custom dataset and save .p weights
+- Trained Yolov5s with custom dataset and save .pt weights
+Example:
 ```
 python train.py --data dataset/dataset.yaml --weights yolov5m.pt --img 640 --batch 40 --epochs 80
 ```
 
 - Use export.py on your deployment hardware (Jetson nano in this case) to get model.engine (which is the same as model.plan)
+Example:
 ```
 python3 export.py --weights yolov5s.pt --include engine --imgsz 640 640 --device 0 # --half
 ```
