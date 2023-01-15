@@ -91,13 +91,13 @@ class Yolov5_grpc:
         description: Removes detections with lower object confidence score than 'conf_thres' and performs
         Non-Maximum Suppression to further filter detections.
         param:
-            prediction: detections, (x1, y1, x2, y2, conf, cls_id)
+            prediction: detections - (center_x, center_y, w, h, obj_conf, classes)
             origin_h: original image height
             origin_w: original image width
             conf_thres: a confidence threshold to filter detections
             nms_thres: a iou threshold to filter detections
         return:
-            boxes: output after nms with the shape (x1, y1, x2, y2, conf, cls_id)
+            boxes: output after nms (x1, y1, x2, y2, conf, cls_id)
         """
         # Get the boxes that score > conf_thresh
         boxes = prediction[prediction[:, 4] >= conf_thres]
@@ -132,7 +132,7 @@ class Yolov5_grpc:
         """
         description: postprocess the prediction
         param:
-            output:     A numpy likes [num_boxes,cx,cy,w,h,conf,cls_id, cx,cy,w,h,conf,cls_id, ...]
+            output:     (n_anchors, n_classes + 5), example: (25200, 85)
             origin_h:   height of original image
             origin_w:   width of original image
         return:
@@ -188,7 +188,9 @@ class Yolov5_grpc:
                     valid_scores.append(score)
         return answer, valid_scores
 
-    def grpc_detect(self, image: np.ndarray, stride: int = 32) -> List:
+    def grpc_detect(
+        self, image: np.ndarray, stride: int = 32, min_accuracy: float = 0.5
+    ) -> List:
         processed_image = self.preprocess(image, stride)
         pred = self.predict(processed_image)
         boxes, scores = self.postprocess(pred, image.shape[0], image.shape[1])
