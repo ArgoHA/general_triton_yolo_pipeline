@@ -1,5 +1,4 @@
 # This script is based on different grpc examples for triton server
-import time
 import tritonclient.grpc as grpcclient
 from typing import List
 import numpy as np
@@ -11,7 +10,6 @@ from src.utils import (
     xywh2xyxy,
     bbox_iou,
     scale_boxes,
-    fps_counter,
 )
 
 IOU_THRESHOLD = 0.45
