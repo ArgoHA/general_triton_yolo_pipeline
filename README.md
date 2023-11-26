@@ -2,36 +2,31 @@ This is a repo with a Triton Server deployment template. As a model example [YOL
 This example should easily transfer to other hardware and models. Note, for the model I recommend using [YOLOv8](https://github.com/ultralytics/ultralytics), as it's a newer and better verison of YOLOv5.
 
 ### Preperations
-- Install nvidia libs for deep learning (nvidia-drivers, cuda toolkit, cudnn)
+- Install nvidia libs for deep learning (nvidia-drivers, cuda toolkit, cudnn, tensorrt)
 - Install PyTorch
-- Install Triton server
-- Install YOLOv5
+- Install [Triton inference server](https://docs.nvidia.com/deeplearning/triton-inference-server/archives/triton_inference_server_220/user-guide/docs/install.html) (docker recommended)
+- Install Ultralytics
 
-### Training and export
-- Trained Yolov5s with custom dataset and save .pt weights
-Example:
-```
-python train.py --data dataset/dataset.yaml --weights yolov5m.pt --img 640 --batch 40 --epochs 80
-```
-
-- Use export.py on your deployment hardware (Jetson nano in this case) to get model.engine (which is the same as model.plan)
-Example:
-```
-python3 export.py --weights yolov5s.pt --include engine --imgsz 640 640 --device 0 # --half
-```
+Get your yolov8 detection model weigts exported to engine with [ultralytics docs](https://docs.ultralytics.com/modes/export/)
 
 ### Deployment
-- Put model.plan in model_repository/yolov5/1/
-- Correct config.pbtxt if needed (if ypu have another input/output for your model). Number of classes should be changed in output dims (number of classes + 5)
+- Put model.plan in model_repository/yolov8/1/
+- Correct config.pbtxt if needed (if ypu have another input/output for your model). Number of classes should be changed in output dims (number of classes + 4)
 
 ### Start triton
-I use systemctl to make a service from triton backend, so it is always alive when machine is powered. Use command like this to start triton server:
 
 ```
-/home/argo/installation_triton/bin/tritonserver --model-repository=/home/argo/general_triton_yolo_pipeline/model_repository/ --backend-directory=/home/argo/installation_triton/backends
+docker run --gpus=all --rm -d -p8000:8000 -p8001:8001 -p8002:8002 -v/model_repo_path:/models nvcr.io/nvidia/tritonserver:23.07-py3 tritonserver --model-repository=/models
 ```
+model_repo_path - full path to your model_repository
+23.07-py3 - version of your triton inference server
+
+### Configs
+
+- change name_to_label_mapping to fit your labels
+- change video src link (supports webcams, rtsp and just videos)
 
 ### Run pipeline with test video
 ```
-python3 main.py
+python -m src.main
 ```
