@@ -1,5 +1,4 @@
-This is a repo with a Triton Server deployment template. As a model example [YOLOv5](https://github.com/ultralytics/yolov5) was chosen, converted to [TensorRT](https://developer.nvidia.com/tensorrt). As a hardware [Nvidia Jetson Nano](https://developer.nvidia.com/embedded/jetson-nano-developer-kit) was used. Pipeline runs on a test video.
-This example should easily transfer to other hardware and models. Note, for the model I recommend using [YOLOv8](https://github.com/ultralytics/ultralytics), as it's a newer and better verison of YOLOv5.
+This is a repo with a Triton Server deployment template. As a model example [YOLOv8](https://github.com/ultralytics/ultralytics) was chosen, converted to [TensorRT](https://developer.nvidia.com/tensorrt). Tested on Nvidia 3060. Pipeline runs on a test video.
 
 ### Preperations
 - Install nvidia libs for deep learning (nvidia-drivers, cuda toolkit, cudnn, tensorrt)
