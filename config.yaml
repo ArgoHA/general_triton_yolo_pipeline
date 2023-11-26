@@ -1,0 +1,36 @@
+detector_conf: 0.5
+device: cuda
+
+name_to_label_mapping: {'Label_1': 1, 'Label_2': 2, 'Label_3': 3}
+
+src:
+  # webcam:
+  #   fps: 30
+  #   resolution: [1920, 1080]
+  #   links:
+  #   - 0
+  rtsp:
+    fps: 15
+    resolution: [1920, 1080]
+    links:
+    # - rtsp:// your rtsp link here
+  video:
+    fps: 30
+    resolution: [1920, 1080]
+    links:
+    # - your path to video here
+
+
+output_path: data/images
+
+
+### service ###
+defaults:
+  - _self_
+  - override hydra/hydra_logging: disabled
+  - override hydra/job_logging: disabled
+
+hydra:
+  output_subdir: null
+  run:
+    dir: .
