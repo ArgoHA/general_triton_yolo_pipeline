@@ -1,13 +1,14 @@
+import time
 from pathlib import Path
 from threading import Thread
-import time
+
 import cv2
 import hydra
 from omegaconf import DictConfig
 
+from src.grpc_clients.yolov8_grpc import Yolov8_grpc
 from src.helpers.camera import connect_source
 from src.helpers.utils import draw_results
-from src.grpc_clients.yolov8_grpc import Yolov8_grpc
 
 
 class Pipeline:
@@ -21,7 +22,9 @@ class Pipeline:
         cam_fps: int,
         detector_conf: float,
     ):
-        self.detector = Yolov8_grpc(conf_thresh=detector_conf)
+        self.detector = Yolov8_grpc(
+            model_name="yolov8", conf_thresh=detector_conf, half=False, url="localhost:8001"
+        )
         self.src = src
         self.idx = idx
         self.device = device
